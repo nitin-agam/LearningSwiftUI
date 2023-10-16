@@ -7,31 +7,49 @@
 
 import SwiftUI
 
+struct WeatherDay {
+    
+    let name: String
+    let image: String
+    let temp: Int
+    
+    static func dummyData() -> [Self] {
+        return [
+            WeatherDay(name: "TUE", image: "sun.max.fill", temp: 75),
+            WeatherDay(name: "WED", image: "cloud.sun.fill", temp: 68),
+            WeatherDay(name: "THU", image: "cloud.sun.rain.fill", temp: 62),
+            WeatherDay(name: "FRI", image: "cloud.rainbow.half", temp: 65),
+            WeatherDay(name: "SAT", image: "snowflake", temp: 26)
+        ]
+    }
+}
+
 struct ContentView: View {
+    
+    @State private var isNight = false
+    private let weatherDays: [WeatherDay] = WeatherDay.dummyData()
     
     var body: some View {
         ZStack {
-            WeatherBackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
+            WeatherBackgroundView(isNight: $isNight)
             VStack {
                 CityNameView(cityName: "New Delhi, India")
-                CurrentWeatherStatusView(imageName: "cloud.sun.fill", temperature: 76)
+                CurrentWeatherStatusView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill", temperature: 76)
                 
                 HStack(spacing: 20) {
-                    WeatherDayView(dayName: "TUE", imageName: "sun.max.fill", temperature: 60)
-                    WeatherDayView(dayName: "WED", imageName: "cloud.sun.fill", temperature: 70)
-                    WeatherDayView(dayName: "THU", imageName: "cloud.sun.rain.fill", temperature: 62)
-                    WeatherDayView(dayName: "FRI", imageName: "cloud.rainbow.half", temperature: 40)
-                    WeatherDayView(dayName: "SAT", imageName: "snowflake", temperature: 26)
+                    ForEach(weatherDays, id: \.name) { day in
+                        WeatherDayView(weatherDay: day)
+                    }
                 }
                 
                 Spacer()
                 
                 Button(action: {
-                    
+                    isNight.toggle()
                 }, label: {
                     WeatherButtonView(title: "Change Time of Day",
-                                      textColor: .blue,
-                                      backgroundColor: .white)
+                                      textColor: .white,
+                                      backgroundColor: isNight ? .black : .blue)
                 })
                 
                 Spacer()
@@ -46,23 +64,21 @@ struct ContentView: View {
 
 struct WeatherDayView: View {
     
-    let dayName: String
-    let imageName: String
-    let temperature: Int
+    let weatherDay: WeatherDay
     
     var body: some View {
         VStack(spacing: 12) {
-            Text(dayName)
+            Text(weatherDay.name)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(.white)
             
-            Image(systemName: imageName)
+            Image(systemName: weatherDay.image)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
             
-            Text("\(temperature)°")
+            Text("\(weatherDay.temp)°")
                 .font(.system(size: 28, weight: .medium))
                 .foregroundStyle(.white)
         }
@@ -71,11 +87,11 @@ struct WeatherDayView: View {
 
 struct WeatherBackgroundView: View {
     
-    let topColor: Color
-    let bottomColor: Color
+    @Binding var isNight: Bool
     
     var body: some View {
-        LinearGradient(colors: [topColor, bottomColor],
+        LinearGradient(colors: [isNight ? .black : .blue,
+                                isNight ? .gray : Color("lightBlue")],
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
             .ignoresSafeArea(edges: .all)
@@ -126,7 +142,7 @@ struct WeatherButtonView: View {
         Text(title)
             .frame(width: 280, height: 50)
             .foregroundStyle(textColor)
-            .background(backgroundColor)
+            .background(backgroundColor.gradient)
             .font(.system(size: 20, weight: .semibold))
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }

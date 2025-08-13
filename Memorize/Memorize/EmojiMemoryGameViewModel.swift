@@ -24,7 +24,7 @@ class EmojiMemoryGameViewModel: ObservableObject {
     
     @Published private var model = createMemoryGame()
     
-    var cards: [MemoryGame<String>.Card] {
+    var cards: [Card] {
         return model.cards
     }
     
@@ -32,7 +32,7 @@ class EmojiMemoryGameViewModel: ObservableObject {
         model.shuffle()
     }
     
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         model.choose(card)
     }
 }

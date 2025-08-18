@@ -10,6 +10,7 @@ import SwiftUI
 typealias Card = MemoryGame<String>.Card
 
 struct CardView: View {
+    
     let card: Card
     
     init(_ card: Card) {
@@ -17,20 +18,17 @@ struct CardView: View {
     }
     
     var body: some View {
-        ZStack {
-            let base = RoundedRectangle(cornerRadius: 12)
-            Group {
-                base.fill(.white)
-                base.strokeBorder(style: .init(lineWidth: 2))
+        Pie(endAngle: .degrees(240))
+            .opacity(0.4)
+            .overlay {
                 Text(card.content)
                     .font(.system(size: 80))
                     .minimumScaleFactor(0.01)
                     .aspectRatio(1, contentMode: .fit)
             }
-            .opacity(card.isFaceUp ? 1 : 0)
-            base.fill().opacity(card.isFaceUp ? 0 : 1)
-        }
-        .opacity((card.isFaceUp || card.isMatched == false) ? 1 : 0)
+            .padding(8)
+            .cardify(isFaceUp: card.isFaceUp)
+            .opacity((card.isFaceUp || card.isMatched == false) ? 1 : 0)
     }
 }
 

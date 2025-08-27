@@ -25,10 +25,19 @@ struct CardView: View {
                     .font(.system(size: 80))
                     .minimumScaleFactor(0.01)
                     .aspectRatio(1, contentMode: .fit)
+                    .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+                    .animation(.spin(1), value: card.isMatched)
             }
             .padding(8)
             .cardify(isFaceUp: card.isFaceUp)
             .opacity((card.isFaceUp || card.isMatched == false) ? 1 : 0)
+    }
+}
+
+extension Animation {
+    
+    static func spin(_ duration: TimeInterval) -> Animation {
+        .linear(duration: duration).repeatForever(autoreverses: false)
     }
 }
 

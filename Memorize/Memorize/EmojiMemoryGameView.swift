@@ -20,6 +20,8 @@ struct EmojiMemoryGameView: View {
             HStack {
                 score
                 Spacer()
+                deck.foregroundStyle(.orange)
+                Spacer()
                 shuffle
             }
             .font(.system(size: 24, weight: .semibold))
@@ -42,16 +44,60 @@ struct EmojiMemoryGameView: View {
     
     private var cards: some View {
         AspectVGrid(items: viewModel.cards, aspectRatio: cardAspectRatio) { card in
-            CardView(card)
-                .padding(4)
-                .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
-                .zIndex(scoreChange(causedBy: card) != 0 ? 1 : 0)
-                .onTapGesture {
-                    chooseCard(card)
-                }
+            if isDealt(card) {
+                CardView(card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
+                    .padding(4)
+                    .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+                    .zIndex(scoreChange(causedBy: card) != 0 ? 1 : 0)
+                    .onTapGesture {
+                        chooseCard(card)
+                    }
+            }
         }
         .foregroundStyle(.orange)
     }
+    
+    @State private var dealt = Set<Card.ID>()
+    
+    private func isDealt(_ card: Card) -> Bool {
+        dealt.contains(card.id)
+    }
+    
+    private var undealtCards: [Card] {
+        viewModel.cards.filter { isDealt($0) == false }
+    }
+    
+    @Namespace private var dealingNamespace
+    
+    private func deal() {
+        var delay: CGFloat = 0.0
+        for card in viewModel.cards {
+            withAnimation(.easeInOut(duration: 1).delay(delay)) {
+                _ = dealt.insert(card.id)
+            }
+            
+            delay += 0.15
+        }
+    }
+    
+    var deck: some View {
+        ZStack {
+            ForEach(undealtCards) { card in
+                CardView(card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
+            }
+        }
+        .frame(width: deckWidth, height: deckWidth / cardAspectRatio)
+        .onTapGesture {
+            // deal the cards
+            deal()
+        }
+    }
+    
+    private let deckWidth: CGFloat = 50
     
     private func chooseCard(_ card: Card) {
         withAnimation {

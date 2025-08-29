@@ -9,11 +9,56 @@ import SwiftUI
 
 // View
 struct EmojiArtDocumentView: View {
+    
+    @ObservedObject var document: EmojiArtDocument
+    
+    private let emojis = "👻🍎😃🤪☹️🤯🐶🐭🦁🐵🦆🐝🐢🐄🐖🌲🌴🌵🍄🌞🌎🔥🌈🌧️🌨️☁️⛄️⛳️🚗🚙🚓🚲🛺🏍️🚘✈️🛩️🚀🚁🏰🏠❤️💤⛵️"
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            documentBody
+            ScrollingEmojis(emojis)
+                .font(.system(size: 40))
+                .padding(.horizontal)
+                .scrollIndicators(.hidden)
+        }
+    }
+    
+    private var documentBody: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color.white
+                AsyncImage(url: document.background)
+                    .position(Emoji.Position.zero.in(geometry))
+                ForEach(document.emojis) { emoji in
+                    Text(emoji.string)
+                        .position(emoji.position.in(geometry))
+                        .font(emoji.font)
+                }
+            }
+        }
+    }
+}
+
+struct ScrollingEmojis: View {
+    
+    private let emojis: [String]
+    
+    init(_ emojis: String) {
+        self.emojis = emojis.uniqued.map(String.init)
+    }
+    
+    var body: some View {
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(emojis, id: \.self) { emoji in
+                    Text(emoji)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    EmojiArtDocumentView()
+    EmojiArtDocumentView(document: EmojiArtDocument())
 }

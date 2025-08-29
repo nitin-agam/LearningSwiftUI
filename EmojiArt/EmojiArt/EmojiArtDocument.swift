@@ -7,12 +7,17 @@
 
 import SwiftUI
 
+typealias Emoji = EmojiArt.Emoji
+
 // ViewModel
-class EmojiArtDocument {
-    
-    typealias Emoji = EmojiArt.Emoji
+class EmojiArtDocument: ObservableObject {
     
     var emojiArt = EmojiArt()
+    
+    init() {
+        emojiArt.addEmoji("🐶", size: 200, position: .init(x: -200, y: 150))
+        emojiArt.addEmoji("🐱", size: 100, position: .init(x: 200, y: 100))
+    }
     
     var emojis: [Emoji] {
         emojiArt.emojis
@@ -24,5 +29,9 @@ class EmojiArtDocument {
     
     func setBackground(_ url: URL) {
         emojiArt.background = url
+    }
+    
+    func addEmoji(_ string: String, size: CGFloat, position: Emoji.Position) {
+        emojiArt.addEmoji(string, size: Int(size), position: position)
     }
 }

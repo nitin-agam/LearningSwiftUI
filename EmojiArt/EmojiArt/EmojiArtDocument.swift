@@ -12,7 +12,7 @@ typealias Emoji = EmojiArt.Emoji
 // ViewModel
 class EmojiArtDocument: ObservableObject {
     
-    var emojiArt = EmojiArt()
+    @Published private var emojiArt = EmojiArt()
     
     init() {
         emojiArt.addEmoji("🐶", size: 200, position: .init(x: -200, y: 150))

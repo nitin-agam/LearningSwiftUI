@@ -1,9 +1,8 @@
 //
-//  Extension.swift
-//  Emoji Art
+//  Extensions.swift
+//  Extensions
 //
-//  Created by CS193p Instructor on 5/8/23.
-//  Copyright (c) 2023 Stanford University
+//  Created by Nitin Kumar on 28/08/25.
 //
 
 import SwiftUI

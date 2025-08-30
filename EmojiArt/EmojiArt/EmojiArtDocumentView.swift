@@ -12,13 +12,14 @@ struct EmojiArtDocumentView: View {
     
     @ObservedObject var document: EmojiArtDocument
     
+    private let emojiSize: CGFloat = 40
     private let emojis = "👻🍎😃🤪☹️🤯🐶🐭🦁🐵🦆🐝🐢🐄🐖🌲🌴🌵🍄🌞🌎🔥🌈🌧️🌨️☁️⛄️⛳️🚗🚙🚓🚲🛺🏍️🚘✈️🛩️🚀🚁🏰🏠❤️💤⛵️"
     
     var body: some View {
         VStack {
             documentBody
             ScrollingEmojis(emojis)
-                .font(.system(size: 40))
+                .font(.system(size: emojiSize))
                 .padding(.horizontal)
                 .scrollIndicators(.hidden)
         }
@@ -36,7 +37,36 @@ struct EmojiArtDocumentView: View {
                         .font(emoji.font)
                 }
             }
+            .dropDestination(for: Sturldata.self) { items, location in
+                drop(items, at: location, in: geometry)
+            }
         }
+    }
+    
+    private func drop(_ items: [Sturldata], at location: CGPoint, in geometry: GeometryProxy) -> Bool {
+        for data in items {
+            switch data {
+                case .url(let url):
+                    document.setBackground(url)
+                    return true
+                    
+                case .string(let emoji):
+                    document.addEmoji(emoji, size: emojiSize,
+                                      position: emojiPosition(at: location, in: geometry))
+                    return true
+                    
+                default: break
+            }
+        }
+        return false
+    }
+    
+    private func emojiPosition(at location: CGPoint, in geometry: GeometryProxy) -> Emoji.Position {
+        let center = geometry.frame(in: .local).center
+        return Emoji.Position(
+            x: Int(location.x - center.x),
+            y: Int(-(location.y - center.y))
+        )
     }
 }
 
@@ -53,6 +83,7 @@ struct ScrollingEmojis: View {
             HStack {
                 ForEach(emojis, id: \.self) { emoji in
                     Text(emoji)
+                        .draggable(emoji)
                 }
             }
         }

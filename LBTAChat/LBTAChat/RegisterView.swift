@@ -13,13 +13,13 @@ struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var loginStatusMessage = ""
+    @State private var shouldShowImagePicker = false
+    @State private var selectedProfileImage: UIImage?
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                
                 VStack(spacing: 16) {
-                    
                     Picker("", selection: $isLoginMode) {
                         Text("Login")
                             .tag(true)
@@ -30,10 +30,26 @@ struct RegisterView: View {
                     
                     if isLoginMode == false {
                         Button {
-                            
+                            shouldShowImagePicker.toggle()
                         } label: {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 80))
+                            VStack {
+                                if let profileImage = selectedProfileImage {
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 120, height: 120)
+                                        .cornerRadius(120)
+                                } else {
+                                    Image(systemName: "person.fill")
+                                        .frame(width: 120, height: 120)
+                                        .font(.system(size: 80))
+                                        .foregroundStyle(.black.opacity(0.7))
+                                }
+                            }
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 120)
+                                    .stroke(.black.opacity(0.2), lineWidth: 1.5)
+                            }
                         }
                         .padding()
                     }
@@ -70,6 +86,9 @@ struct RegisterView: View {
             }
             .navigationTitle(isLoginMode ? "Login" : "Create Account")
             .background(Color(.init(white: 0, alpha: 0.05)))
+            .fullScreenCover(isPresented: $shouldShowImagePicker) {
+                ImagePicker(image: $selectedProfileImage)
+            }
         }
     }
     

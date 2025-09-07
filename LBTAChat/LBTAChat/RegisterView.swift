@@ -125,6 +125,37 @@ struct RegisterView: View {
             
             self.loginStatusMessage = "User Created: \(String(describing: result?.user.uid))"
             print(loginStatusMessage)
+            
+            uploadProfileImage()
+        }
+    }
+    
+    private func uploadProfileImage() {
+        
+        guard let imageData = selectedProfileImage?.jpegData(compressionQuality: 0.5),
+        let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return
+        }
+        
+        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        ref.putData(imageData, metadata: nil) { metadata, error in
+            
+            if let error = error {
+                self.loginStatusMessage = "Failed to upload profile image with error: \(error)"
+                print(loginStatusMessage)
+                return
+            }
+            
+            ref.downloadURL { url, error in
+                if let error = error {
+                    self.loginStatusMessage = "Failed to download image url with error: \(error)"
+                    print(loginStatusMessage)
+                    return
+                }
+                
+                self.loginStatusMessage = "Successfully uploaded image at: \(String(describing: url?.absoluteString))"
+                print(loginStatusMessage)
+            }
         }
     }
 }

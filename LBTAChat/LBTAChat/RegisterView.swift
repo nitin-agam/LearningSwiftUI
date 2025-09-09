@@ -155,8 +155,39 @@ struct RegisterView: View {
                 
                 self.loginStatusMessage = "Successfully uploaded image at: \(String(describing: url?.absoluteString))"
                 print(loginStatusMessage)
+                
+                guard let imageUrl = url?.absoluteString else { return }
+                
+                self.storeUserInfo(with: imageUrl)
             }
         }
+    }
+    
+    private func storeUserInfo(with profileImageUrl: String) {
+        
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return
+        }
+        
+        let userData: [String: Any] = [
+            "uid": uid,
+            "email": email,
+            "profileImageUrl": profileImageUrl
+        ]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .setData(userData) { error in
+                if let error = error {
+                    self.loginStatusMessage = "Error storing user data: \(error)"
+                    print(loginStatusMessage)
+                    return
+                }
+                
+                self.loginStatusMessage = "User data stored successfully!"
+                print(loginStatusMessage)
+            }
     }
 }
 

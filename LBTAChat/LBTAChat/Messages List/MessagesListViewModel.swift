@@ -16,6 +16,14 @@ class MessagesListViewModel: ObservableObject {
         fetchCurrentUser()
     }
     
+    var username: String? {
+        currentUser?.email.components(separatedBy: "@").first
+    }
+    
+    var profileImageURL: URL? {
+        URL(string: currentUser?.profileImageUrl ?? "")
+    }
+    
     private func fetchCurrentUser() {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {

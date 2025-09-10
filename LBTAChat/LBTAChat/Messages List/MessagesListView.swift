@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct MessagesListView: View {
     
@@ -26,16 +27,20 @@ struct MessagesListView: View {
     
     private var customNavigationBar: some View {
         HStack {
-            Image(systemName: "person.fill")
-                .font(.system(size: 22))
-                .padding(12)
+            
+            WebImage(url: viewModel.profileImageURL)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 50, height: 50)
+                .cornerRadius(50)
                 .overlay {
                     Circle()
                         .stroke(style: StrokeStyle(lineWidth: 1))
                 }
+                .shadow(radius: 5)
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Swiftable")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(viewModel.username ?? "")
                     .font(.system(size: 20, weight: .semibold))
                     
                 HStack(alignment: .center, spacing: 6) {

@@ -73,7 +73,9 @@ struct MessagesListView: View {
             }), .cancel()])
         })
         .fullScreenCover(isPresented: $viewModel.isCurrentlyLoggedOut) {
-            RegisterView()
+            RegisterView(didCompleteLoginProcess: {
+                self.viewModel.isCurrentlyLoggedOut = false
+            })
         }
     }
     

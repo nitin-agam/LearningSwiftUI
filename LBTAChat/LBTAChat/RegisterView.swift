@@ -9,6 +9,8 @@ import SwiftUI
 
 struct RegisterView: View {
     
+    let didCompleteLoginProcess: () -> ()
+    
     @State private var isLoginMode = false
     @State private var email: String = ""
     @State private var password: String = ""
@@ -111,6 +113,7 @@ struct RegisterView: View {
             
             self.loginStatusMessage = "User Login: \(String(describing: result?.user.uid))"
             print(loginStatusMessage)
+            self.didCompleteLoginProcess()
         }
     }
     
@@ -192,5 +195,7 @@ struct RegisterView: View {
 }
 
 #Preview {
-    RegisterView()
+    RegisterView(didCompleteLoginProcess: {
+        
+    })
 }

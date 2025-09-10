@@ -9,11 +9,13 @@ import SwiftUI
 
 struct MessagesListView: View {
     
+    @ObservedObject private var viewModel = MessagesListViewModel()
     @State private var isLogoutSheetPresented: Bool = false
     
     var body: some View {
         NavigationView {
             VStack {
+                Text("Current User: \(viewModel.currentUser?.email ?? "NA")")
                 customNavigationBar
                 messageListView
             }

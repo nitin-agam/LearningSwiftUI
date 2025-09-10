@@ -49,14 +49,7 @@ class MessagesListViewModel: ObservableObject {
             }
             
             self.statusMessage = "Data: \(data)"
-            
-            guard let uid = data["uid"] as? String,
-            let email = data["email"] as? String,
-            let profileImageUrl = data["profileImageUrl"] as? String else {
-                return
-            }
-            
-            self.currentUser = ChatUser(uid: uid, email: email, profileImageUrl: profileImageUrl)
+            self.currentUser = ChatUser(data: data)
         }
     }
     

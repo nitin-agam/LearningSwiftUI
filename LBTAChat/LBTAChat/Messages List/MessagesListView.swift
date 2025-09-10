@@ -12,6 +12,7 @@ struct MessagesListView: View {
     
     @ObservedObject private var viewModel = MessagesListViewModel()
     @State private var isLogoutSheetPresented: Bool = false
+    @State private var isUserListPresented: Bool = false
     
     var body: some View {
         NavigationView {
@@ -117,7 +118,7 @@ struct MessagesListView: View {
     
     private var newMessageButton: some View {
         Button {
-            
+            self.isUserListPresented.toggle()
         } label: {
             HStack {
                 Spacer()
@@ -131,6 +132,9 @@ struct MessagesListView: View {
             .cornerRadius(32)
             .padding(.horizontal)
             .shadow(radius: 15)
+        }
+        .fullScreenCover(isPresented: $isUserListPresented) {
+            UserListView()
         }
     }
 }

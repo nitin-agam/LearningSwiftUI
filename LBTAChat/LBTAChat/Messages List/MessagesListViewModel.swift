@@ -11,8 +11,14 @@ class MessagesListViewModel: ObservableObject {
     
     @Published var statusMessage = ""
     @Published var currentUser: ChatUser?
+    @Published var isCurrentlyLoggedOut = false
     
     init() {
+        
+        DispatchQueue.main.async {
+            self.isCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser == nil
+        }
+        
         fetchCurrentUser()
     }
     
@@ -52,5 +58,10 @@ class MessagesListViewModel: ObservableObject {
             
             self.currentUser = ChatUser(uid: uid, email: email, profileImageUrl: profileImageUrl)
         }
+    }
+    
+    func handleSignOut() {
+        isCurrentlyLoggedOut.toggle()
+        try? FirebaseManager.shared.auth.signOut()
     }
 }

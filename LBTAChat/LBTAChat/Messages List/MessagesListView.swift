@@ -42,7 +42,7 @@ struct MessagesListView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.username ?? "")
                     .font(.system(size: 20, weight: .semibold))
-                    
+                
                 HStack(alignment: .center, spacing: 6) {
                     Circle()
                         .foregroundStyle(.green)
@@ -66,10 +66,15 @@ struct MessagesListView: View {
         .actionSheet(isPresented: $isLogoutSheetPresented, content: {
             .init(title: Text("Settings"),
                   message: Text("What do you want to do?"),
-                  buttons: [.destructive(Text("Sign Out"), action: {
-                
+                  buttons: [.destructive(Text("Sign Out"),
+                                         action: {
+                // handle sign out here...
+                viewModel.handleSignOut()
             }), .cancel()])
         })
+        .fullScreenCover(isPresented: $viewModel.isCurrentlyLoggedOut) {
+            RegisterView()
+        }
     }
     
     private var messageListView: some View {

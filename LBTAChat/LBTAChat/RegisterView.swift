@@ -118,6 +118,12 @@ struct RegisterView: View {
     }
     
     private func createAccount() {
+        
+        if self.selectedProfileImage == nil {
+            self.loginStatusMessage = "Please select a profile image to proceed further."
+            return
+        }
+        
         FirebaseManager.shared.auth.createUser(withEmail: email,
                                password: password) { result, error in
             guard error == nil else {
@@ -190,6 +196,7 @@ struct RegisterView: View {
                 
                 self.loginStatusMessage = "User data stored successfully!"
                 print(loginStatusMessage)
+                self.didCompleteLoginProcess()
             }
     }
 }

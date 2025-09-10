@@ -75,6 +75,7 @@ struct MessagesListView: View {
         .fullScreenCover(isPresented: $viewModel.isCurrentlyLoggedOut) {
             RegisterView(didCompleteLoginProcess: {
                 self.viewModel.isCurrentlyLoggedOut = false
+                self.viewModel.fetchCurrentUser()
             })
         }
     }

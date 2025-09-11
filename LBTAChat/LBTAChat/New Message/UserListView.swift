@@ -12,6 +12,7 @@ struct UserListView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject private var viewModel = UserListViewModel()
+    let didSelectUser: (ChatUser) -> ()
     
     var body: some View {
         NavigationView {
@@ -25,6 +26,7 @@ struct UserListView: View {
                 VStack(alignment: .leading) {
                     Button {
                         presentationMode.wrappedValue.dismiss()
+                        didSelectUser(user)
                     } label: {
                         HStack {
                             profileImageView(for: user.profileImageUrl)
@@ -70,5 +72,5 @@ struct UserListView: View {
 }
 
 #Preview {
-    UserListView()
+    UserListView { _ in }
 }

@@ -13,6 +13,8 @@ struct MessagesListView: View {
     @ObservedObject private var viewModel = MessagesListViewModel()
     @State private var isLogoutSheetPresented: Bool = false
     @State private var isUserListPresented: Bool = false
+    @State private var selectedChatUser: ChatUser?
+    @State private var shouldNavigateToChatLog = false
     
     var body: some View {
         NavigationView {
@@ -20,6 +22,10 @@ struct MessagesListView: View {
                 Text("Current User: \(viewModel.currentUser?.email ?? "NA")")
                 customNavigationBar
                 messageListView
+                
+                NavigationLink("", isActive: $shouldNavigateToChatLog) {
+                    ChatLogView(chatUser: selectedChatUser)
+                }
             }
             .overlay (newMessageButton, alignment: .bottom)
             .navigationBarHidden(true)
@@ -85,29 +91,34 @@ struct MessagesListView: View {
         ScrollView {
             ForEach(0..<20, id: \.self) { num in
                 VStack {
-                    HStack {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 28))
-                            .padding()
-                            .overlay {
-                                Circle()
-                                    .stroke(style: StrokeStyle(lineWidth: 1))
-                            }
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Swiftable")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundStyle(.primary)
+                    NavigationLink {
+                        Text("destination...")
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 28))
+                                .padding()
+                                .overlay {
+                                    Circle()
+                                        .stroke(style: StrokeStyle(lineWidth: 1))
+                                }
                             
-                            Text("Last sent or received message will be display here...")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Swiftable")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(.primary)
+                                
+                                Text("Last sent or received message will be display here...")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
+                            Spacer()
+                            Text("1d")
                         }
-                        Spacer()
-                        Text("1d")
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+
                     Divider()
                         .padding(.vertical, 6)
                 }
@@ -134,7 +145,10 @@ struct MessagesListView: View {
             .shadow(radius: 15)
         }
         .fullScreenCover(isPresented: $isUserListPresented) {
-            UserListView()
+            UserListView { selectedUser in
+                self.selectedChatUser = selectedUser
+                self.shouldNavigateToChatLog.toggle()
+            }
         }
     }
 }

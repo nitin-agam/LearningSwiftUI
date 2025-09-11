@@ -11,9 +11,7 @@ import SwiftUI
 struct LBTAChatApp: App {
     var body: some Scene {
         WindowGroup {
-            RegisterView(didCompleteLoginProcess: {
-                
-            })
+            MessagesListView()
         }
     }
 }

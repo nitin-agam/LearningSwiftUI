@@ -17,18 +17,20 @@ class UserListViewModel: ObservableObject {
     }
     
     func fetchUserList() {
-        FirebaseManager.shared.firestore.collection("users").getDocuments { snapshot, error in
+        
+        guard let currentUserID = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .whereField("uid", isNotEqualTo: currentUserID)
+            .getDocuments { snapshot, error in
             if let error = error {
                 self.statusMessage = "failed to fetch user list...: \(error)"
                 return
             }
             
             snapshot?.documents.forEach { documentSnapshot in
-                let user = ChatUser(data: documentSnapshot.data())
-                
-                if user.uid != FirebaseManager.shared.auth.currentUser?.uid {
-                    self.users.append(user)
-                }
+                self.users.append(ChatUser(data: documentSnapshot.data()))
             }
             
             self.statusMessage = "Fetched user count...: \(self.users.count)"

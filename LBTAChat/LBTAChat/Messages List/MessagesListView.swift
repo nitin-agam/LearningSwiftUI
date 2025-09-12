@@ -24,7 +24,7 @@ struct MessagesListView: View {
                 messageListView
                 
                 NavigationLink("", isActive: $shouldNavigateToChatLog) {
-                    ChatLogView(chatUser: selectedChatUser!)
+                    ChatLogView(chatUser: selectedChatUser)
                 }
             }
             .overlay (newMessageButton, alignment: .bottom)

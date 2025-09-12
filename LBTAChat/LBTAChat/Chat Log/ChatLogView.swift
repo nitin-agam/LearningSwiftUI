@@ -10,14 +10,16 @@ import SwiftUI
 struct ChatLogView: View {
     
     @ObservedObject private var viewModel: ChatLogViewModel
+    private let chatUser: ChatUser?
     
-    init(chatUser: ChatUser) {
+    init(chatUser: ChatUser?) {
+        self.chatUser = chatUser
         viewModel = ChatLogViewModel(chatUser: chatUser)
     }
     
     var body: some View {
         chatHistoryView
-            .navigationTitle(viewModel.chatUser.email)
+            .navigationTitle(viewModel.chatUser?.email ?? "")
         .navigationBarTitleDisplayMode(.inline)
     }
     

@@ -13,6 +13,7 @@ class ChatLogViewModel: ObservableObject {
     let chatUser: ChatUser?
     @Published var chatText = ""
     @Published var messages: [ChatMessage] = []
+    @Published var count = 0
     
     init(chatUser: ChatUser?) {
         self.chatUser = chatUser
@@ -28,6 +29,7 @@ class ChatLogViewModel: ObservableObject {
             .collection("messages")
             .document(senderId)
             .collection(receiverId)
+            .order(by: "createdAt")
             .addSnapshotListener { querySnapshot, error in
                 
                 if let error = error {
@@ -40,6 +42,10 @@ class ChatLogViewModel: ObservableObject {
                         let message = ChatMessage(documentId: documentChange.document.documentID, data: documentChange.document.data())
                         self.messages.append(message)
                     }
+                }
+                
+                DispatchQueue.main.async {
+                    self.count += 1
                 }
             }
     }

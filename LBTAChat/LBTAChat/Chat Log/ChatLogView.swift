@@ -20,28 +20,30 @@ struct ChatLogView: View {
     var body: some View {
         chatHistoryView
             .navigationTitle(viewModel.chatUser?.email ?? "")
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
+//            .navigationBarItems(trailing: Button(action: {
+//                viewModel.count += 1
+//            }, label: {
+//                Text("Count: \(viewModel.count)")
+//            }))
     }
     
     private var chatHistoryView: some View {
         ScrollView {
-            ForEach(viewModel.messages) { message in
-                HStack {
-                    Spacer()
-                    HStack {
-                        Text(message.text)
-                            .foregroundStyle(.white)
+            ScrollViewReader { proxy in
+                VStack {
+                    ForEach(viewModel.messages) { message in
+                        MessageView(message: message)
                     }
-                    .padding()
-                    .background(.blue)
-                    .cornerRadius(8)
+                    
+                    HStack { Spacer() }
+                        .id("empty")
                 }
-                .padding(.horizontal)
-                .padding(.top, 8)
-            }
-            
-            HStack {
-                Spacer()
+                .onReceive(viewModel.$count) { _ in
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        proxy.scrollTo("empty", anchor: .bottom)
+                    }
+                }
             }
         }
         .background(Color(.init(white: 0.95, alpha: 1)))

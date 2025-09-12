@@ -9,23 +9,17 @@ import SwiftUI
 
 struct ChatLogView: View {
     
-    @State private var chatText = ""
-    let chatUser: ChatUser?
+    @ObservedObject private var viewModel: ChatLogViewModel
+    
+    init(chatUser: ChatUser) {
+        viewModel = ChatLogViewModel(chatUser: chatUser)
+    }
     
     var body: some View {
         chatHistoryView
-//        ZStack {
-//            chatHistoryView
-//            VStack {
-//                Spacer()
-//                inputBoxView
-//                    .background(.white)
-//            }
-//        }
-        .navigationTitle(chatUser?.email ?? "")
+            .navigationTitle(viewModel.chatUser.email)
         .navigationBarTitleDisplayMode(.inline)
     }
-    
     
     private var chatHistoryView: some View {
         ScrollView {
@@ -65,11 +59,15 @@ struct ChatLogView: View {
                     .foregroundStyle(Color(.darkGray))
             }
             
-            TextField("Enter message..", text: $chatText)
-                .font(.system(size: 16, weight: .medium))
-
+            ZStack {
+                DescriptionPlaceholder()
+                TextEditor(text: $viewModel.chatText)
+                    .opacity(viewModel.chatText.isEmpty ? 0.5 : 1)
+            }
+            .frame(height: 40)
+            
             Button {
-                
+                viewModel.handleSend()
             } label: {
                 Text("Send")
                     .foregroundStyle(.white)

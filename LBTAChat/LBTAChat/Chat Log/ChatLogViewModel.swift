@@ -12,9 +12,36 @@ class ChatLogViewModel: ObservableObject {
     
     let chatUser: ChatUser?
     @Published var chatText = ""
+    @Published var messages: [ChatMessage] = []
     
     init(chatUser: ChatUser?) {
         self.chatUser = chatUser
+        fetchChatLog()
+    }
+    
+    private func fetchChatLog() {
+        
+        guard let senderId = FirebaseManager.shared.auth.currentUser?.uid,
+              let receiverId = chatUser?.uid else { return }
+        
+        FirebaseManager.shared.firestore
+            .collection("messages")
+            .document(senderId)
+            .collection(receiverId)
+            .addSnapshotListener { querySnapshot, error in
+                
+                if let error = error {
+                    print("Failed to send message data: \(error)")
+                    return
+                }
+                
+                querySnapshot?.documentChanges.forEach { documentChange in
+                    if documentChange.type == .added {
+                        let message = ChatMessage(documentId: documentChange.document.documentID, data: documentChange.document.data())
+                        self.messages.append(message)
+                    }
+                }
+            }
     }
     
     func handleSend() {
@@ -22,7 +49,7 @@ class ChatLogViewModel: ObservableObject {
         print("Text: \(chatText)")
         
         guard let senderId = FirebaseManager.shared.auth.currentUser?.uid,
-        let receiverId = chatUser?.uid else { return }
+              let receiverId = chatUser?.uid else { return }
         
         let messageData = ["senderId": senderId,
                            "receiverId": receiverId,

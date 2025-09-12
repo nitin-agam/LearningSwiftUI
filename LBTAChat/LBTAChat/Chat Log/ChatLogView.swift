@@ -25,11 +25,11 @@ struct ChatLogView: View {
     
     private var chatHistoryView: some View {
         ScrollView {
-            ForEach(0..<40) { _ in
+            ForEach(viewModel.messages) { message in
                 HStack {
                     Spacer()
                     HStack {
-                        Text("Fake Message Here...")
+                        Text(message.text)
                             .foregroundStyle(.white)
                     }
                     .padding()

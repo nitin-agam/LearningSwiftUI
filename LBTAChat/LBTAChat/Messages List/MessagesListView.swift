@@ -89,39 +89,8 @@ struct MessagesListView: View {
     
     private var messageListView: some View {
         ScrollView {
-            ForEach(0..<20, id: \.self) { num in
-                VStack {
-                    NavigationLink {
-                        Text("destination...")
-                    } label: {
-                        HStack {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 28))
-                                .padding()
-                                .overlay {
-                                    Circle()
-                                        .stroke(style: StrokeStyle(lineWidth: 1))
-                                }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Swiftable")
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundStyle(.primary)
-                                
-                                Text("Last sent or received message will be display here...")
-                                    .font(.system(size: 14))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                            }
-                            Spacer()
-                            Text("1d")
-                        }
-                        .padding(.horizontal)
-                    }
-
-                    Divider()
-                        .padding(.vertical, 6)
-                }
+            ForEach(viewModel.recentMessages) { message in
+                RecentMessageView(message: message)
             }
             .padding(.bottom, 50)
         }

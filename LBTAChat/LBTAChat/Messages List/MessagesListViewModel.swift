@@ -55,7 +55,7 @@ class MessagesListViewModel: ObservableObject {
         }
     }
     
-    private func fetchRecentMessages() {
+    func fetchRecentMessages() {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         

@@ -27,8 +27,9 @@ struct RecentMessageView: View {
                         
                         Text(message?.text ?? "")
                             .font(.system(size: 14))
-                            .foregroundStyle(Color(.darkGray))
+                            .foregroundStyle(Color(.gray))
                             .lineLimit(2)
+                            .multilineTextAlignment(.leading)
                     }
                     Spacer()
                     Text("1d")

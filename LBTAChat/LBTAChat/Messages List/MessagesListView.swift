@@ -83,6 +83,7 @@ struct MessagesListView: View {
             RegisterView(didCompleteLoginProcess: {
                 self.viewModel.isCurrentlyLoggedOut = false
                 self.viewModel.fetchCurrentUser()
+                self.viewModel.fetchRecentMessages()
             })
         }
     }

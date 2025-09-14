@@ -59,6 +59,8 @@ class MessagesListViewModel: ObservableObject {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
+        recentMessages.removeAll()
+        
         FirebaseManager.shared.firestore
             .collection("recent_messages")
             .document(uid)

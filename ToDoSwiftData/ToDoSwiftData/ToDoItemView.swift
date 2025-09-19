@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ToDoItemView: View {
     
+    @Environment(\.modelContext) var context
     let item: ToDoItem
     
     var body: some View {
@@ -32,7 +34,10 @@ struct ToDoItemView: View {
             Spacer()
             
             Button {
-                
+                withAnimation {
+                    item.isCompleted.toggle()
+                    try? context.save()
+                }
             } label: {
                 Image(systemName: "checkmark.circle")
                     .symbolVariant(.fill)

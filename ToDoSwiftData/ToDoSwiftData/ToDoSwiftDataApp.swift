@@ -14,7 +14,7 @@ struct ToDoSwiftDataApp: App {
     var body: some Scene {
         WindowGroup {
             ToDoListView()
-                .modelContainer(for: ToDoItem.self, inMemory: true)
+                .modelContainer(for: ToDoItem.self)
         }
     }
 }

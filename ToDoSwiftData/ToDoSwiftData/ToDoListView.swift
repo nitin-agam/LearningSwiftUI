@@ -10,6 +10,7 @@ import SwiftData
 
 struct ToDoListView: View {
     
+    @Environment(\.modelContext) var context
     @State private var showCreateToDoView = false
     @Query private var items: [ToDoItem]
     
@@ -18,8 +19,22 @@ struct ToDoListView: View {
             List {
                 ForEach(items) { item in
                     ToDoItemView(item: item)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                withAnimation {
+                                    context.delete(item)
+                                    try? context.save()
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                                    .symbolVariant(.fill)
+                                    .font(.largeTitle)
+                            }
+
+                        }
                 }
             }
+            .navigationTitle("ToDo List")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

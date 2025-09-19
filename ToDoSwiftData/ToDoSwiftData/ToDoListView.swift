@@ -13,6 +13,7 @@ struct ToDoListView: View {
     @Environment(\.modelContext) var context
     @State private var showCreateToDoView = false
     @Query private var items: [ToDoItem]
+    @State private var itemToEdit: ToDoItem?
     
     var body: some View {
         NavigationStack {
@@ -30,7 +31,15 @@ struct ToDoListView: View {
                                     .symbolVariant(.fill)
                                     .font(.largeTitle)
                             }
-
+                            
+                            Button {
+                                itemToEdit = item
+                            } label: {
+                                Image(systemName: "pencil")
+                                    .symbolVariant(.fill)
+                                    .font(.largeTitle)
+                            }
+                            .tint(.blue)
                         }
                 }
             }
@@ -50,6 +59,14 @@ struct ToDoListView: View {
                 }
                 .presentationDetents([.medium])
             }
+            .sheet(item: $itemToEdit) {
+                itemToEdit = nil
+            } content: { item in
+                NavigationStack {
+                    UpdateToDoView(item: item)
+                }
+                .presentationDetents([.medium])
+            }
         }
     }
 }
@@ -58,12 +75,12 @@ struct ToDoListView: View {
     ToDoListView()
         .modelContainer(for: ToDoItem.self, inMemory: true) { result in
             switch result {
-            case .success(let container):
-                let context = container.mainContext
-                context.insert(ToDoItem(title: "Buy milk", isCritical: true))
-                context.insert(ToDoItem(title: "Finish SwiftData guide", isCritical: true))
-            case .failure(let error):
-                print("Failed to create in-memory ModelContainer: \(error)")
+                case .success(let container):
+                    let context = container.mainContext
+                    context.insert(ToDoItem(title: "Buy milk", isCritical: true))
+                    context.insert(ToDoItem(title: "Finish SwiftData guide", isCritical: true))
+                case .failure(let error):
+                    print("Failed to create in-memory ModelContainer: \(error)")
             }
         }
 }

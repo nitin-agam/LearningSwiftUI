@@ -13,7 +13,7 @@ struct ToDoSwiftDataApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ToDoListView()
                 .modelContainer(for: ToDoItem.self)
         }
     }

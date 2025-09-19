@@ -12,8 +12,13 @@ struct ToDoListView: View {
     
     @Environment(\.modelContext) var context
     @State private var showCreateToDoView = false
-    @Query private var items: [ToDoItem]
     @State private var itemToEdit: ToDoItem?
+    
+    @Query(
+        filter: #Predicate { $0.isCompleted == false },
+        sort: \ToDoItem.timestamp,
+        order: .forward
+    ) private var items: [ToDoItem]
     
     var body: some View {
         NavigationStack {

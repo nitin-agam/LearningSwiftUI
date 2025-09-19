@@ -17,18 +17,7 @@ struct ToDoListView: View {
         NavigationStack {
             List {
                 ForEach(items) { item in
-                    HStack {
-                        VStack {
-                            
-                            if item.isCritical {
-                                Image(systemName: "")
-                            }
-                            
-                            Text(item.title)
-                            
-                            Text("\(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .shortened))")
-                        }
-                    }
+                    ToDoItemView(item: item)
                 }
             }
             .toolbar {
@@ -52,5 +41,14 @@ struct ToDoListView: View {
 
 #Preview {
     ToDoListView()
-        .modelContainer(for: ToDoItem.self)
+        .modelContainer(for: ToDoItem.self, inMemory: true) { result in
+            switch result {
+            case .success(let container):
+                let context = container.mainContext
+                context.insert(ToDoItem(title: "Buy milk", isCritical: true))
+                context.insert(ToDoItem(title: "Finish SwiftData guide", isCritical: true))
+            case .failure(let error):
+                print("Failed to create in-memory ModelContainer: \(error)")
+            }
+        }
 }

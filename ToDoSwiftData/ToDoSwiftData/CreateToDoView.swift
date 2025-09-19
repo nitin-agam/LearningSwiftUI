@@ -36,5 +36,5 @@ struct CreateToDoView: View {
 
 #Preview {
     CreateToDoView()
-        .modelContainer(for: ToDoItem.self)
+        .modelContainer(for: ToDoItem.self, inMemory: true)
 }

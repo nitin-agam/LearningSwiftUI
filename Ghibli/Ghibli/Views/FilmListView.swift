@@ -12,11 +12,25 @@ struct FilmListView: View {
     @State private var viewModel = FilmListViewModel()
     
     var body: some View {
-        List(viewModel.films) { film in
-            Text(film.title)
+        NavigationStack {
+            switch viewModel.state {
+                case .idle:
+                    Text("No films yet...")
+                case .loading:
+                    ProgressView {
+                        Text("Loading...")
+                    }
+                case .loaded(let films):
+                    List(films) { film in
+                        Text(film.title)
+                    }
+                case .error(let error):
+                    Text(error)
+                        .foregroundStyle(.red)
+            }
         }
         .task {
-            await viewModel.fetchFilms()
+            await viewModel.fetch()
         }
     }
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct GhibliApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FilmListView()
         }
     }
 }

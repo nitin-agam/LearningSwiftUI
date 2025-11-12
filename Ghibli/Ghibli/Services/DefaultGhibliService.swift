@@ -29,6 +29,7 @@ struct DefaultGhibliService: GhibliService {
         }
     }
     
+    // MARK: - Protocol Conformation
     func fetchFilms() async throws -> [Film] {
         let urlString = "https://ghibliapi.vercel.app/films"
         return try await fetch(from: urlString, type: [Film].self)

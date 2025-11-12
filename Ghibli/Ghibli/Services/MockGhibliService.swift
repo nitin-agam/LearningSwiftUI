@@ -31,6 +31,7 @@ struct MockGhibliService: GhibliService {
         }
     }
     
+    // MARK: - Protocol Conformation
     func fetchFilms() async throws -> [Film] {
         let sampleData = try loadSampleData()
         return sampleData.films
@@ -39,5 +40,11 @@ struct MockGhibliService: GhibliService {
     func fetchPerson(from urlString: String) async throws -> Person {
         let sampleData = try loadSampleData()
         return sampleData.people.first!
+    }
+    
+    // MARK: - Testing
+    func fetchFilm() -> Film {
+        let sampleData = try! loadSampleData()
+        return sampleData.films.first!
     }
 }

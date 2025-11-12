@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FilmListView: View {
     
-    @State private var viewModel = FilmListViewModel()
+    var viewModel: FilmListViewModel
     
     var body: some View {
         NavigationStack {
@@ -25,7 +25,7 @@ struct FilmListView: View {
                         Text(film.title)
                     }
                 case .error(let error):
-                    Text(error)
+                    Text(error.localizedUppercase)
                         .foregroundStyle(.red)
             }
         }
@@ -36,5 +36,6 @@ struct FilmListView: View {
 }
 
 #Preview {
-    FilmListView()
+    @State @Previewable var viewModel = FilmListViewModel(service: MockGhibliService())
+    FilmListView(viewModel: viewModel)
 }

@@ -22,7 +22,12 @@ struct FilmListView: View {
                     }
                 case .loaded(let films):
                     List(films) { film in
-                        Text(film.title)
+                        NavigationLink(value: film) {
+                            Text(film.title)
+                        }
+                    }
+                    .navigationDestination(for: Film.self) { film in
+                        FilmDetailsView(film: film)
                     }
                 case .error(let error):
                     Text(error.localizedUppercase)

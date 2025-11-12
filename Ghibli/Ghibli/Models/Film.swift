@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Film: Codable, Identifiable, Equatable {
+struct Film: Codable, Identifiable, Equatable, Hashable {
     let id: String
     let title: String
     let description: String
@@ -28,6 +28,10 @@ struct Film: Codable, Identifiable, Equatable {
         case score = "rt_score"
         case bannerImageURL = "movie_banner"
         case imageURL = "image"
+    }
+    
+    static var example: Film {
+        MockGhibliService().fetchFilm()
     }
 }
 

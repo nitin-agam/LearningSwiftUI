@@ -9,8 +9,9 @@ import SwiftUI
 
 struct FilmDetailsView: View {
     
-    @State private var viewModel = FilmDetailsViewModel()
+    @State private var filmDetailViewModel = FilmDetailsViewModel()
     let film: Film
+    let favoriteViewModel: FavoritesViewModel
     
     var body: some View {
         ScrollView {
@@ -24,7 +25,7 @@ struct FilmDetailsView: View {
                     
                     Divider()
                     
-                    switch viewModel.state {
+                    switch filmDetailViewModel.state {
                         case .idle:
                             Text("No details yet...")
                             
@@ -47,11 +48,11 @@ struct FilmDetailsView: View {
             }
         }
         .task(id: film) {
-            await self.viewModel.fetch(for: film)
+            await self.filmDetailViewModel.fetch(for: film)
         }
     }
 }
 
 #Preview {
-    FilmDetailsView(film: Film.example)
+    FilmDetailsView(film: Film.example, favoriteViewModel: FavoritesViewModel(service: MockFavoriteStorage()))
 }

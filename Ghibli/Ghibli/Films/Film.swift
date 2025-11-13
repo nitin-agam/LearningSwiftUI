@@ -33,6 +33,10 @@ struct Film: Codable, Identifiable, Equatable, Hashable {
     static var example: Film {
         MockGhibliService().fetchFilm()
     }
+    
+    static var examples: [Film] {
+        MockGhibliService().fetchMockFilms()
+    }
 }
 
 import Playgrounds

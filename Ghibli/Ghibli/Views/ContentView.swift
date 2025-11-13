@@ -30,6 +30,9 @@ struct ContentView: View {
                 SearchScreenView()
             }
         }
+        .task {
+            favoritesViewModel.load()
+        }
     }
 }
 

@@ -29,22 +29,46 @@ private struct FilmRowItem: View {
     let film: Film
     let favoritesViewModel: FavoritesViewModel
     
+    var isFavorite: Bool {
+        favoritesViewModel.isFavorite(filmId: film.id)
+    }
+    
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             FilmImageView(urlPath: film.imageURL)
                 .frame(width: 100, height: 150)
-            Text(film.title)
-            Button {
-                favoritesViewModel.toggleFavorite(forId: film.id)
-            } label: {
-                Image(systemName: favoritesViewModel.isFavorite(filmId: film.id) ? "heart.fill" : "heart")
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(film.title)
+                        .font(.system(size: 20, weight: .semibold))
+                    Spacer()
+                    Button {
+                        favoritesViewModel.toggleFavorite(forId: film.id)
+                    } label: {
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .foregroundStyle(isFavorite ? Color.pink : Color.gray)
+                            .font(.system(size: 22))
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.bottom, 8)
+                
+                Text("Director: \(film.director)")
+                    .font(.system(size: 16))
+                    .padding(.bottom, 1)
+                
+                Text("Released: \(film.releaseYear)")
+                    .font(.system(size: 16))
             }
-            .buttonStyle(.plain)
+            .padding(.top)
         }
     }
 }
 
-//#Preview {
-//    @State @Previewable var viewModel = FilmListViewModel(service: MockGhibliService())
-//    FilmListView(viewModel: viewModel)
-//}
+#Preview {
+    @State @Previewable var viewModel = FavoritesViewModel(service: MockFavoriteStorage())
+    NavigationStack {
+        FilmListView(films: Film.examples, favoritesViewModel: viewModel)
+    }
+}

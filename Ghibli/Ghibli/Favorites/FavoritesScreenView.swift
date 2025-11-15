@@ -13,7 +13,12 @@ struct FavoritesScreenView: View {
     var favoritesViewModel: FavoritesViewModel
     
     var films: [Film] {
-        return []
+        let favorites = favoritesViewModel.favoriteIds
+        switch filmsViewModel.state {
+            case .loaded(let array):
+                return array.filter({ favorites.contains($0.id) })
+            default: return []
+        }
     }
     
     var body: some View {
@@ -21,7 +26,6 @@ struct FavoritesScreenView: View {
             Group {
                 if films.isEmpty {
                     ContentUnavailableView("No Favorites Yet", systemImage: "heart")
-                    
                 } else {
                     FilmListView(films: films, favoritesViewModel: favoritesViewModel)
                 }
@@ -32,5 +36,5 @@ struct FavoritesScreenView: View {
 }
 
 #Preview {
-    FavoritesScreenView(filmsViewModel: FilmListViewModel(service: MockGhibliService()), favoritesViewModel: FavoritesViewModel(service: MockFavoriteStorage()))
+    FavoritesScreenView(filmsViewModel: FilmListViewModel.previewExample, favoritesViewModel: FavoritesViewModel.previewExample)
 }

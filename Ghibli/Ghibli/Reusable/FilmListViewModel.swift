@@ -18,7 +18,6 @@ class FilmListViewModel {
         case error(String)
     }
     
-    var films: [Film] = []
     var state: State = .idle
     private let service: GhibliService
     
@@ -37,5 +36,12 @@ class FilmListViewModel {
         } catch {
             self.state = .error("unknown error")
         }
+    }
+    
+    // MARK: - Preview
+    static var previewExample: FilmListViewModel {
+        let viewModel = FilmListViewModel(service: MockGhibliService())
+        viewModel.state = .loaded([Film.example])
+        return viewModel
     }
 }

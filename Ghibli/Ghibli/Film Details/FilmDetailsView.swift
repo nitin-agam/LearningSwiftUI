@@ -47,6 +47,9 @@ struct FilmDetailsView: View {
                 .padding()
             }
         }
+        .toolbar {
+            FavoriteButton(filmID: film.id, favoritesViewModel: favoriteViewModel)
+        }
         .task(id: film) {
             await self.filmDetailViewModel.fetch(for: film)
         }
@@ -54,5 +57,7 @@ struct FilmDetailsView: View {
 }
 
 #Preview {
-    FilmDetailsView(film: Film.example, favoriteViewModel: FavoritesViewModel(service: MockFavoriteStorage()))
+    NavigationStack {
+        FilmDetailsView(film: Film.example, favoriteViewModel: FavoritesViewModel(service: MockFavoriteStorage()))
+    }
 }

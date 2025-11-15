@@ -32,6 +32,7 @@ struct ContentView: View {
         }
         .task {
             favoritesViewModel.load()
+            await filmViewModel.fetch()
         }
     }
 }

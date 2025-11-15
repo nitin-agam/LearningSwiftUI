@@ -42,6 +42,13 @@ struct MockGhibliService: GhibliService {
         return sampleData.people.first!
     }
     
+    func searchFilms(forText searchText: String) async throws -> [Film] {
+        let allFilms = try await fetchFilms()
+        return allFilms.filter { film in
+            film.title.localizedStandardContains(searchText)
+        }
+    }
+    
     // MARK: - Testing
     func fetchFilm() -> Film {
         let sampleData = try! loadSampleData()
